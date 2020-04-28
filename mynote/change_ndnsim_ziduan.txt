@@ -1,0 +1,99 @@
+https://lo.calho.st/networks/adding-custom-packet-fields-to-packets-in-ndnsim-2-3-without-forking-the-entire-repository/
+原文链接
+
+首先在src/ndnSIM/ndn-cxx/ndn-cxx/lp/tags.hpp中加上
+typedef ndn::SimpleTag<uint64_t, 0x60000001> MyCustomTag;
+uint64_t,是标签的数据类型
+0x60000001是标签的ID号
+所能够使用的ID号0x60000001----0x6fffffff
+具体见
+https://redmine.named-data.net/projects/ndn-cxx/wiki/PacketTagTypes
+
+为兴趣包加上一个Tag
+interest.setTag<lp::MyCustomTag>(std::make_shared<lp::MyCustomTag>(54321));
+
+从一个兴趣包中读取一个Tag
+std::shared_ptr<lp::MyCustomTag> tag = interest.getTag<lp::MyCustomTag>();
+
+读取出来的tag只是一个指向tag对象的指针，如果需要获取他的值，采用以下的代码。首先进行一下判断，判断是否为空
+if(tag == nullptr){
+    // no tag
+}
+else{
+    uint64_t tagValue = tag->get();
+}
+
+但是此时我们仅仅是加上了Tag，兴趣包并不会将其转发出去，在到达下一个路由器的时候，其实Tag就已经没有了。
+
+如何解决这个问题呢？
+ndnsim里面有一个类GenericLinkService（src/ndnSIM/NFD/daemon/face/generic-link-service.hpp/cpp）
+这个类我理解就是把网络层的包进行编码到链路层的包，其中的下面的一个方法就是进行的编码操作
+encodeLpFields(const ndn::PacketBase& netPkt, lp::Packet& lpPacket);
+{
+.......
+//以hopcout为例子，其他的也可以借鉴
+shared_ptr<lp::HopCountTag> hopCountTag = netPkt.getTag<lp::HopCountTag>();
+if (hopCountTag != nullptr) {
+    lpPacket.add<lp::HopCountTagField>(*hopCountTag);
+}
+else {
+    lpPacket.add<lp::HopCountTagField>(0);
+}
+......
+}
+
+那么很明显我们应该对lpPacket中的HopCountTagField这个字段空间进行定义，不然没有地方放那个Tag
+(其实放在其他地方也没问题，但是专地方专用，别混了这体现了严谨)
+src/ndnSIM/ndn-cxx/ndn-cxx/lp/fields.hpp在这个文件里面进行了定义HopCountTagField
+例子1：
+typedef FieldDecl<field_location_tags::Header,
+                  uint64_t,
+                  tlv::HopCountTag> HopCountTagField;                                                         
+BOOST_CONCEPT_ASSERT((Field<HopCountTagField>));
+例子2：
+typedef FieldDecl<field_location_tags::Header,					//指示字段在lppacket中的位置的标记
+                  uint64_t,										//字段值类型,最好就是这个文章中说不然不会编译？？原因是encodehelper只有这个类型？？
+                  tlv::CongestionMark,							//字段的TLV类型编号
+                  false,										//字段可以重复吗
+                  NonNegativeIntegerTag,						//选择decodehelper的专门化，这个代表了非负整形
+                  NonNegativeIntegerTag> CongestionMarkField;	//选择encodehelper的专门化，这个代表了非负整形
+//编码解码的helper默认和字段值类型是一样的
+BOOST_CONCEPT_ASSERT((Field<CongestionMarkField>));
+
+FieldDecl其实是一个模板类，<...>中代表了很多构造类的参数内容。
+
+//FieldSet里面需要进行添加相应的field
+typedef boost::mpl::set<                                                                               
+....
+  PrefixAnnouncementField,
+  HopCountTagField
+....
+  > FieldSet;
+
+
+我们继续看上面没有接触到的东西，就是字段的TLV类型编号：    tlv::CongestionMark
+这个是在src/ndnSIM/ndn-cxx/ndn-cxx/lp/tlv.hpp
+enum {
+  LpPacket = 100,
+  Fragment = 80, 
+  Sequence = 81, 
+  FragIndex = 82, 
+  FragCount = 83, 
+  HopCountTag = 84, 
+//如果在FieldSet集里面没有进行定义的话，在这里ExtractFieldInfo()进行提取信息的时候，不能识别出你这个Field，就会报错。那么有两中解决方案，第一个就行进行定义（但是文章中说我们不能进行重载？？？没试过），第二种就是设置的这个值需要满足条件就可以被忽略：在tlv::HEADER3_MIN 与 tlv::HEADER3_MAX之间的值，并且满足 (tlvType & 0x03) == 0x00；
+在进行对值的选取的时候，需要查看是否有其他的用过。
+  Nack = 800,
+  NackReason = 801,
+  NextHopFaceId = 816,
+  IncomingFaceId = 817,
+  CachePolicy = 820,
+  CachePolicyType = 821,
+  CongestionMark = 832,
+  Ack = 836,
+  TxSequence = 840,
+  NonDiscovery = 844,
+  PrefixAnnouncement = 848,
+};
+
+
+直接拷贝generic-link-service.hpp和generic-link-service.cpp 从 ns3/ndnSIM/NFD/daemon/face/ 文件夹中 考到自己的工程中

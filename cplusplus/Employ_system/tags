@@ -1,0 +1,53 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BIN	makefile	/^BIN = Employee_system$/;"	m
+CXX	makefile	/^CXX = g++ $/;"	m
+Database	Database.hpp	/^	class Database$/;"	c	namespace:Records
+Employee	Employee.cpp	/^	Employee::Employee(const std::string& firstName,$/;"	f	class:Records::Employee
+Employee	Employee.hpp	/^	class Employee$/;"	c	namespace:Records
+OBJS	makefile	/^OBJS = $(patsubst %cpp, %o, $(SRCS))$/;"	m
+Records	Database.cpp	/^namespace Records{$/;"	n	file:
+Records	Database.hpp	/^namespace Records{$/;"	n
+Records	Employee.cpp	/^namespace Records {$/;"	n	file:
+Records	Employee.hpp	/^namespace Records {$/;"	n
+SRCS	makefile	/^SRCS = $(wildcard *.cpp)  $/;"	m
+STDFLAGS	makefile	/^STDFLAGS = c++17$/;"	m
+addEployee	Database.cpp	/^	Employee& Database::addEployee(const std::string& firstname,$/;"	f	class:Records::Database
+demote	Employee.cpp	/^	void Employee::demote(int demeritAmount)$/;"	f	class:Records::Employee
+display	Employee.cpp	/^	void Employee::display() const$/;"	f	class:Records::Employee
+displayAll	Database.cpp	/^	void Database::displayAll() const$/;"	f	class:Records::Database
+displayCurrent	Database.cpp	/^	void Database::displayCurrent() const$/;"	f	class:Records::Database
+displayFormer	Database.cpp	/^	void Database::displayFormer() const$/;"	f	class:Records::Database
+displayMenu	test.cpp	/^int displayMenu()$/;"	f
+doDemote	test.cpp	/^void doDemote(Database& db)$/;"	f
+doFire	test.cpp	/^void doFire(Database& db)$/;"	f
+doHire	test.cpp	/^void doHire(Database& db)$/;"	f
+doPromote	test.cpp	/^void doPromote(Database& db)$/;"	f
+fire	Employee.cpp	/^	void Employee::fire()$/;"	f	class:Records::Employee
+getEmployeeNumber	Employee.cpp	/^	int Employee::getEmployeeNumber() const	$/;"	f	class:Records::Employee
+getEployee	Database.cpp	/^	Employee& Database::getEployee(const std::string& firstname,$/;"	f	class:Records::Database
+getEployee	Database.cpp	/^	Employee& Database::getEployee(int employeeNumber)$/;"	f	class:Records::Database
+getFirstName	Employee.cpp	/^	const std::string& Employee::getFirstName() const	$/;"	f	class:Records::Employee
+getLastName	Employee.cpp	/^	const std::string& Employee::getLastName() const	$/;"	f	class:Records::Employee
+getSalary	Employee.cpp	/^	int Employee::getSalary() const	$/;"	f	class:Records::Employee
+hire	Employee.cpp	/^	void Employee::hire()$/;"	f	class:Records::Employee
+isHired	Employee.cpp	/^	bool Employee::isHired() const$/;"	f	class:Records::Employee
+kDefaultStartingSalary	Employee.hpp	/^	const int kDefaultStartingSalary = 3000;$/;"	m	namespace:Records
+kFirstEmployeeNumber	Database.hpp	/^	const int kFirstEmployeeNumber = 1000;$/;"	m	namespace:Records
+mEmployeeNumber	Employee.hpp	/^			int mEmployeeNumber = -1;$/;"	m	class:Records::Employee
+mEmployees	Database.hpp	/^			std::vector<Employee> mEmployees;$/;"	m	class:Records::Database
+mFirstName	Employee.hpp	/^			std::string mFirstName;$/;"	m	class:Records::Employee
+mHired	Employee.hpp	/^			bool mHired = false;$/;"	m	class:Records::Employee
+mLastName	Employee.hpp	/^			std::string mLastName;$/;"	m	class:Records::Employee
+mNextEmployeeNumber	Database.hpp	/^			int mNextEmployeeNumber = kFirstEmployeeNumber;$/;"	m	class:Records::Database
+mSalary	Employee.hpp	/^			int mSalary = kDefaultStartingSalary;$/;"	m	class:Records::Employee
+main	test.cpp	/^int main()$/;"	f
+promote	Employee.cpp	/^	void Employee::promote(int raiseAmount)$/;"	f	class:Records::Employee
+setEmployeeNumber	Employee.cpp	/^	void Employee::setEmployeeNumber(int employeeNumber)$/;"	f	class:Records::Employee
+setFirstName	Employee.cpp	/^	void Employee::setFirstName(const std::string& firstName)$/;"	f	class:Records::Employee
+setLastName	Employee.cpp	/^	void Employee::setLastName(const std::string& lastName)$/;"	f	class:Records::Employee
+setSalary	Employee.cpp	/^	void Employee::setSalary(int newSalary)$/;"	f	class:Records::Employee
