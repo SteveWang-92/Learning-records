@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Gmsk Tx Rx Sim
-# Generated: Sun Apr 26 08:29:49 2020
+# Generated: Tue Jun  2 20:59:25 2020
 ##################################################
 
 
@@ -135,7 +135,7 @@ class gmsk_tx_rx_sim(grc_wxgui.top_block_gui):
         )
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((1, ))
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, '/home/steve-wang/test.txt', True)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, '/home/steve-wang/test.txt', False)
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, '/home/steve-wang/rx.txt', False)
         self.blocks_file_sink_0.set_unbuffered(False)
         self.blks2_packet_encoder_0 = grc_blks2.packet_mod_b(grc_blks2.packet_encoder(

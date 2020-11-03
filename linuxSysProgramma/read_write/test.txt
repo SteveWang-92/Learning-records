@@ -1,0 +1,14 @@
+5.2.3 Tag propagation
+We now know how to add tags to streams, and how to read them. But what happens to tags after they were read? And what happens to tags that aren't used? After all, there are many blocks that don't care about tags at all.
+
+The answer is: It depends on the tag propagation policy of a block what happens to tags that enter it.
+There are three policies to choose from:
+
+TPP_ALL_TO_ALL: Any tag that enters on any port is propagated automatically to all output ports (this is the default setting)
+TPP_ONE_TO_ONE: Tags entering on port N are propagated to output port N. This only works for blocks with the same number of in- and output ports.
+TPP_DONT: Tags entering the block are not automatically propagated. Only tags created within this block (using add_item_tag()) appear on the output streams.
+We generally set the tag propagation policy in the block's constructor using @set_tag_propagation_policy
+
+When the tag propagation policy is set to TPP_ALL_TO_ALL or TPP_ONE_TO_ONE, the GNU Radio scheduler uses any information available to figure out which output item corresponds to which input item. The block may read them and add new tags, but existing tags are automatically moved downstream in a manner deemed appropriate.
+
+As an example, consider an interpolating block. See the following flow graph:

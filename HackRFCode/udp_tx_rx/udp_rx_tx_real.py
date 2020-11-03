@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Udp Rx Tx Real
-# Generated: Mon Apr 27 08:38:38 2020
+# Generated: Wed Jun  3 19:02:42 2020
 ##################################################
 
 
@@ -284,9 +284,9 @@ class udp_rx_tx_real(grc_wxgui.top_block_gui):
         	verbose=False,
         	log=False,
         )
-        self.blocks_udp_source_0 = blocks.udp_source(gr.sizeof_char*1, '192.168.1.10', 8081, 1472, True)
         self.blocks_udp_sink_0 = blocks.udp_sink(gr.sizeof_char*1, '192.168.1.10', 10000, 1472, True)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((1, ))
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_char*1, '/home/steve-wang/test.txt', True)
         self.blks2_packet_encoder_0 = grc_blks2.packet_mod_b(grc_blks2.packet_encoder(
         		samples_per_symbol=2,
         		bits_per_symbol=2,
@@ -308,9 +308,9 @@ class udp_rx_tx_real(grc_wxgui.top_block_gui):
         ##################################################
         self.connect((self.blks2_packet_decoder_0, 0), (self.blocks_udp_sink_0, 0))
         self.connect((self.blks2_packet_encoder_0, 0), (self.digital_gmsk_mod_0, 0))
+        self.connect((self.blocks_file_source_0, 0), (self.blks2_packet_encoder_0, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.osmosdr_sink_0, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_scopesink2_0, 0))
-        self.connect((self.blocks_udp_source_0, 0), (self.blks2_packet_encoder_0, 0))
         self.connect((self.digital_gmsk_demod_0, 0), (self.blks2_packet_decoder_0, 0))
         self.connect((self.digital_gmsk_mod_0, 0), (self.blocks_multiply_const_vxx_0, 0))
         self.connect((self.osmosdr_source_0, 0), (self.digital_gmsk_demod_0, 0))
